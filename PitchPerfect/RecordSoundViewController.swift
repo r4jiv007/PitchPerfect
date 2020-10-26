@@ -40,6 +40,7 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
        try! session.setCategory(AVAudioSession.Category.playAndRecord, mode: AVAudioSession.Mode.default, options: AVAudioSession.CategoryOptions.defaultToSpeaker)
 
        try! audioRecorder = AVAudioRecorder(url: filePath!, settings: [:])
+       audioRecorder.delegate=self
        audioRecorder.isMeteringEnabled = true
        audioRecorder.prepareToRecord()
        audioRecorder.record()
@@ -55,11 +56,19 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
     }
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        
-        if flag{
+        print("finished recording")
+        if flag {
             performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
         }else{
             print("error saving recording")
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "stopRecording" {
+            let playSoundVC = segue.destination as! PlaySoundViewController
+            let recordedAudioUrl = sender as! URL
+            playSoundVC.recordedAudioURL = recordedAudioUrl
         }
     }
 }

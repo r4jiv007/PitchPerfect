@@ -65,10 +65,10 @@
             </objects>
             <point key="canvasLocation" x="797.10144927536237" y="0.0"/>
         </scene>
-        <!--View Controller-->
+        <!--Play Sound View Controller-->
         <scene sceneID="fpc-nM-2WA">
             <objects>
-                <viewController id="YS5-ew-W3m" sceneMemberID="viewController">
+                <viewController id="YS5-ew-W3m" customClass="PlaySoundViewController" customModule="PitchPerfect" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0Rm-aa-Rlj">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
