@@ -20,17 +20,13 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        print("viewDidLoad called")
         self.stopRecordingButton.isEnabled = false
     }
     
     
     @IBAction func startRecording(_ sender: Any) {
-        self.recordButton.isEnabled=false
-        self.stopRecordingButton.isEnabled=true
-        self.recordingLabel.text="Recording in Progress"
         
+        configureUi(isRecording: true)
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
        let recordingName = "recordedVoice.wav"
        let pathArray = [dirPath, recordingName]
@@ -47,16 +43,13 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
     }
     
     @IBAction func stopRecording(_ sender: Any) {
-        self.recordButton.isEnabled=true
-        self.stopRecordingButton.isEnabled=false
-        self.recordingLabel.text="Tap to Record"
+        configureUi(isRecording: false)
         audioRecorder.stop()
         let audioSession = AVAudioSession.sharedInstance()
         try! audioSession.setActive(false)
     }
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
-        print("finished recording")
         if flag {
             performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
         }else{
@@ -69,6 +62,20 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
             let playSoundVC = segue.destination as! PlaySoundViewController
             let recordedAudioUrl = sender as! URL
             playSoundVC.recordedAudioURL = recordedAudioUrl
+        }
+    }
+    
+    // Mark :
+    
+    func configureUi(isRecording:Bool)  {
+        if isRecording {
+            self.recordButton.isEnabled=false
+            self.stopRecordingButton.isEnabled=true
+            self.recordingLabel.text="Recording in Progress"
+        }else{
+            self.recordButton.isEnabled=true
+            self.stopRecordingButton.isEnabled=false
+            self.recordingLabel.text="Tap to Record"
         }
     }
 }
