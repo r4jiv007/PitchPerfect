@@ -18,6 +18,9 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
     
     var audioRecorder: AVAudioRecorder!
     
+    let recordingName:String = "recordedVoice.wav"
+    let stopRecordingIdentifier:String = "stopRecording"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.stopRecordingButton.isEnabled = false
@@ -28,7 +31,7 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
         
         configureUi(isRecording: true)
         let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory,.userDomainMask, true)[0] as String
-        let recordingName = "recordedVoice.wav"
+        let recordingName = self.recordingName
         let pathArray = [dirPath, recordingName]
         let filePath = URL(string: pathArray.joined(separator: "/"))
 
@@ -51,14 +54,14 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if flag {
-            performSegue(withIdentifier: "stopRecording", sender: audioRecorder.url)
+            performSegue(withIdentifier: stopRecordingIdentifier, sender: audioRecorder.url)
         }else{
             print("error saving recording")
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "stopRecording" {
+        if segue.identifier == stopRecordingIdentifier {
             let playSoundVC = segue.destination as! PlaySoundViewController
             let recordedAudioUrl = sender as! URL
             playSoundVC.recordedAudioURL = recordedAudioUrl
@@ -68,14 +71,8 @@ class RecordSoundViewController: UIViewController,AVAudioRecorderDelegate {
     // Mark :
     
     func configureUi(isRecording:Bool)  {
-        if isRecording {
-            self.recordButton.isEnabled=false
-            self.stopRecordingButton.isEnabled=true
-            self.recordingLabel.text="Recording in Progress"
-        }else{
-            self.recordButton.isEnabled=true
-            self.stopRecordingButton.isEnabled=false
-            self.recordingLabel.text="Tap to Record"
-        }
+            self.recordButton.isEnabled = !isRecording
+            self.stopRecordingButton.isEnabled=isRecording
+            self.recordingLabel.text = isRecording ? "Recording in Progress":"Tap to Record"
     }
 }
